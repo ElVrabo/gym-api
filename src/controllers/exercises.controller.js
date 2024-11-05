@@ -11,26 +11,29 @@ export async function getAllExercises(req,res){
     console.log('Ocurrio el siguiente error', error)
    }
 }
+export async function addExcercise(req,res){
+   const {name,description} = req.body
+   try {
+    const createExcercise = new Excercise({
+      name,
+      description
+    })
+    const savedExcercise = await createExcercise.save()
+    return res.json({message:'El ejercicio se agrego con exito'})
+   } catch (error) {
+      console.log('Ocurrio el siguiente error'), error
+   }
+}
 
-export async function createExcercises(req,res){
-    try {
-        /*insertMany inserta varios documentos de una sola vez*/
-     const excercises = await Excercise.insertMany([
-        {
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR41oeWg5Kn_3RFShvWECiI3wL6YFQwCBg1gQ&s',
-            name:'Abdominales',
-            details:'Las abdominales ayudan a bajar de peso y marcarse'
-
-        },
-        {
-            image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR41oeWg5Kn_3RFShvWECiI3wL6YFQwCBg1gQ&s',
-            name:'Abdominales',
-            details:'Las abdominales ayudan a bajar de peso y marcarse'
-
-        }
-     ]) 
-     return res.status(201).json({message:"Se insertaron los ejercicios bien"})
-    } catch (error) {
-     console.log('Ocurrio el siguiente error', error)
-    }
+export async function deleteExcercise(req,res){
+   const {id} = req.params
+   try {
+      const foundExcerises = await Excercise.findByIdAndDelete(id)
+      if(!foundExcerises){
+         return res.status(404).json({error:"No se encontro el ejercicio"})
+      }
+        return res.status(201).json({message:"Se elimino correctamente el ejercicio"})
+   } catch (error) {
+      console.log('Ocurrio el siguiente error', error)
+   }
 }

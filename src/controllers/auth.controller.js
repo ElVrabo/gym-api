@@ -27,7 +27,7 @@ export async function registerUser(req,res){
         console.log('Ocurrio el siguiente error', error)
     }
 }
-
+ 
 export async function signIn(req,res){
 const {username,password} = req.body
 try {
@@ -51,24 +51,28 @@ try {
 }
 
 export async function verifyToken(req,res){
-  /*se guarda la propiedad authorization que viene en el header de la solicitud*/ 
-    const authHeader = req.headers.authorization;
-      // Verifica que el token esté presente y que sea de tipo Bearer
-  if (authHeader && authHeader.startsWith('Bearer ')) {
-    const token = authHeader.split(' ')[1]; // Obtén el token eliminando el 'Bearer'
+ try {
+   /*se guarda la propiedad authorization que viene en el header de la solicitud*/ 
+   const authHeader = req.headers.authorization;
+   // Verifica que el token esté presente y que sea de tipo Bearer
+if (authHeader && authHeader.startsWith('Bearer ')) {
+ const token = authHeader.split(' ')[1]; // Obtén el token eliminando el 'Bearer'
 
-    // Verificar el token
-    jwt.verify(token, process.env.TOKEN_SECRET, async (err, user) => {
-      if (err) {
-        return res.status(403).json({ message: 'Token no válido' });
-      }
-      const userFound = await User.findById(user.id)
-      if(!userFound){
-        return res.status(401).json({error:"Usuario no autorizado"})
-      }
-      return res.status(200).json({user:userFound})
-    });
-  } else {
-    return res.status(401).json({ message: 'No se proporcionó un token' });
-  }
+ // Verificar el token
+ jwt.verify(token, process.env.TOKEN_SECRET, async (err, user) => {
+   if (err) {
+     return res.status(403).json({ message: 'Token no válido' });
+   }
+   const userFound = await User.findById(user.id)
+   if(!userFound){
+     return res.status(401).json({error:"Usuario no autorizado"})
+   }
+   return res.status(200).json({user:userFound})
+ });
+} else {
+ return res.status(401).json({ message: 'No se proporcionó un token' });
+}
+ } catch (error) {
+  console.log('Ocurrio el siguiente error: ' + error)
+ }
 }

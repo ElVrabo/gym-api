@@ -1,15 +1,11 @@
 import mongoose from "mongoose";
 
 const excerciseSchema = new mongoose.Schema({
-    image:{
-        type:String,
-        required:true
-    },
     name:{
         type:String,
         required:true
     },
-    details:{
+    description:{
         type:String,
         required:true
     }
