@@ -2,7 +2,9 @@ import Excercise from "../models/exercises.model.js"
 
 export async function getAllExercises(req,res){
    try {
-    const foundExcerises = await Excercise.find()
+    const foundExcerises = await Excercise.find({
+      user: req.user.id
+    })
     if(foundExcerises.length > 0){
        return res.status(200).json(foundExcerises)
     }
@@ -12,16 +14,17 @@ export async function getAllExercises(req,res){
    }
 }
 export async function addExcercise(req,res){
-   const {name,description} = req.body
+   const {nombre,descripcion} = req.body
    try {
     const createExcercise = new Excercise({
-      name,
-      description
+      name:nombre,
+      description:descripcion,
+      user: req.user.id
     })
     const savedExcercise = await createExcercise.save()
     return res.json({message:'El ejercicio se agrego con exito'})
    } catch (error) {
-      console.log('Ocurrio el siguiente error'), error
+      console.log('Ocurrio el siguiente error', error)
    }
 }
 
