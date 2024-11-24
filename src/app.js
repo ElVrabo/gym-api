@@ -6,6 +6,7 @@ import cors from "cors"
 import excerciseRoutes from './routes/excercise.routes.js'
 import calendaryRoutes from './routes/calendary.routes.js'
 import expressPrometheusMiddleware from 'express-prometheus-middleware'
+import completedRoutes from './routes/completed.routes.js'
 
 const app = express()
 
@@ -29,7 +30,7 @@ app.use(morgan("dev"))
 app.use('/api', authRoutes)
 app.use('/api', excerciseRoutes)
 app.use('/api',calendaryRoutes)
-
+app.use('/api', completedRoutes)
 
 
 
